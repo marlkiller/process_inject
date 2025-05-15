@@ -20,6 +20,9 @@
 
 /* Begin PBXFileReference section */
 		B50A42E32CA80ABD00CB6706 /* process_inject */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = process_inject; sourceTree = BUILT_PRODUCTS_DIR; };
+		B51252BF2CB942F000708BA6 /* process_inject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = process_inject.entitlements; sourceTree = "<group>"; };
+		B54947A72CAC3AAE0010B3AD /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		B54947A92CAC3B2B0010B3AD /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -44,7 +47,9 @@
 		B50A42DA2CA80ABD00CB6706 = {
 			isa = PBXGroup;
 			children = (
+				B51252BF2CB942F000708BA6 /* process_inject.entitlements */,
 				B50A42E52CA80ABD00CB6706 /* process_inject */,
+				B54947A62CAC3AAE0010B3AD /* Frameworks */,
 				B50A42E42CA80ABD00CB6706 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,6 +60,15 @@
 				B50A42E32CA80ABD00CB6706 /* process_inject */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B54947A62CAC3AAE0010B3AD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B54947A92CAC3B2B0010B3AD /* CoreFoundation.framework */,
+				B54947A72CAC3AAE0010B3AD /* Security.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,9 +258,13 @@
 		B50A42EB2CA80ABD00CB6706 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = process_inject.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PF34J7Z7XR;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.voidm.process-inject";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -254,9 +272,13 @@
 		B50A42EC2CA80ABD00CB6706 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = process_inject.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PF34J7Z7XR;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.voidm.process-inject";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

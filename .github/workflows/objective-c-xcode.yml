@@ -1,0 +1,69 @@
+name: Builder
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  CMAKE_VERSION: 3.5
+  LLVM_VERSION: 15.0.6  
+
+jobs:
+
+  macos:
+    runs-on: macos-latest
+    # needs: delete_latest_release
+    steps:
+    
+    - name: checkout master
+      uses: actions/checkout@master
+      
+    - name: delete latest release
+      uses: dev-drprasad/delete-tag-and-release@v0.2.1
+      with:
+        delete_release: true
+        tag_name: latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}  
+
+    - name: Set up Xcode 16
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '16.2.0'  # 指定 Xcode 16 的版本
+
+    - name: Check Xcode version
+      run: xcodebuild -version
+      
+    - name: compile macos
+      run: |
+          # xcodebuild -showBuildSettings
+          xcodebuild -scheme process_inject -derivedDataPath ./build -configuration Release CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -quiet -showBuildTimingSummary
+          BUILT_PRODUCTS_DIR="./build/Build/Products/Release/"
+          ls -la "$BUILT_PRODUCTS_DIR"
+          
+          echo "-----------Checking entitlements before signing:-----------"
+          codesign -d --entitlements - "$BUILT_PRODUCTS_DIR/process_inject"
+
+          sudo codesign -f -s - --all-architectures --deep --entitlements "process_inject.entitlements" "$BUILT_PRODUCTS_DIR/process_inject"
+
+          echo "-----------Checking entitlements after signing:-----------"
+          codesign -d --entitlements - "$BUILT_PRODUCTS_DIR/process_inject"
+
+          tar -czvf process_inject.tar.gz -C "$BUILT_PRODUCTS_DIR" process_inject
+
+
+
+    - name: update release
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.TOKEN }}
+        tag: latest
+        body: |
+          A macOS dylib project based on the Dobby Hook framework, aimed at enhancing and extending the functionality of target software.
+
+          ## Latest Commit
+          ${{ github.event.head_commit.message }}        
+        artifacts: "process_inject.tar.gz"
+        allowUpdates: true
+        replacesArtifacts: true
