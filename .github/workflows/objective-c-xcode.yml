@@ -38,7 +38,8 @@ jobs:
     - name: compile macos
       run: |
           # xcodebuild -showBuildSettings
-          xcodebuild -scheme process_inject -derivedDataPath ./build -configuration Release CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -quiet -showBuildTimingSummary
+          # xcodebuild -scheme process_inject -derivedDataPath ./build -configuration Release CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -quiet -showBuildTimingSummary
+          xcodebuild -project process_inject.xcodeproj -scheme process_inject -configuration Release -arch arm64 -arch x86_64 ONLY_ACTIVE_ARCH=NO BUILD_LIBRARY_FOR_DISTRIBUTION=YES CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -derivedDataPath ./build 
           BUILT_PRODUCTS_DIR="./build/Build/Products/Release/"
           ls -la "$BUILT_PRODUCTS_DIR"
           
